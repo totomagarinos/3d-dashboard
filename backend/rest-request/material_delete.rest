@@ -1,0 +1,1 @@
+DELETE http://localhost:4000/api/materials/69ab4b2848b656b2eb9f2241 HTTP/1.1
