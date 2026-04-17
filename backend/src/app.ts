@@ -22,7 +22,11 @@ mongoose
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'prod' 
+    ? ['https://tu-dominio-production.com'] 
+    : ['http://localhost:4200']
+}));
 
 if (process.env.NODE_ENV === "prod") {
   app.use(compression());
