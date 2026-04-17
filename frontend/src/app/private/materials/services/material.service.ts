@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class MaterialService {
   #state = signal(new Map<string, Material>());
+  materials = this.#state.asReadonly();
 
   baseUrl = environment.apiUrl;
   http: HttpClient = inject(HttpClient);
