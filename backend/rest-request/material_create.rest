@@ -2,8 +2,8 @@ POST http://localhost:4000/api/materials HTTP/1.1
 Content-Type: application/json
 
 {
-  "type": "PLA Lite",
-  "brand": "Bambú",
-  "weight": 1000,
-  "price": 22000
+  "type": "PLA",
+  "brand": "3N3",
+  "weight": 500,
+  "price": 10000
 }
