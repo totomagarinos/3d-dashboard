@@ -1,0 +1,62 @@
+<div class="relative w-full text-white">
+  <button
+    type="button"
+    (click)="toggleOpen()"
+    [disabled]="isDisabled()"
+    [attr.aria-disabled]="isDisabled()"
+    [attr.aria-expanded]="isOpen()"
+    class="w-full bg-[#2a2d36] border border-gray-700 rounded-lg p-4 text-left outline-none focus:ring-2 focus:ring-cyan-500 flex justify-between items-center transition-colors hover:bg-gray-700 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#2a2d36]"
+  >
+    <span class="truncate">
+      @if (selectedValue(); as material) {
+        {{ material.type }} - {{ material.brand }} ({{ material.weight }}g)
+      } @else {
+        <span class="text-gray-400">Seleccioná un material</span>
+      }
+    </span>
+
+    <svg
+      [class.rotate-180]="isOpen()"
+      class="w-5 h-5 text-gray-400 transition-transform duration-200"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  @if (isOpen() && !isDisabled()) {
+    <div
+      data-scroll-container
+      class="absolute z-50 w-full mt-2 bg-[#1a1c23] border border-gray-700 rounded-lg shadow-2xl max-h-60 overflow-y-auto"
+    >
+      <div class="p-1">
+        @for (item of options(); track item._id) {
+          <button
+            type="button"
+            (click)="selectItem(item)"
+            [class.bg-cyan-500]="selectedValue()?._id === item._id"
+            [class.text-gray-900]="selectedValue()?._id === item._id"
+            class="w-full text-left px-4 py-3 rounded-md hover:bg-gray-800 transition-colors flex flex-col group"
+          >
+            <span
+              class="font-bold group-hover:text-cyan-400 transition-colors"
+              [class.!text-gray-900]="selectedValue()?._id === item._id"
+            >
+              {{ item.type }}
+            </span>
+            <span
+              class="text-sm text-gray-400"
+              [class.!text-gray-800]="selectedValue()?._id === item._id"
+            >
+              {{ item.brand }} — ${{ item.price }}
+            </span>
+          </button>
+        } @empty {
+          <div class="p-4 text-center text-gray-500">No hay materiales disponibles</div>
+        }
+      </div>
+    </div>
+  }
+</div>

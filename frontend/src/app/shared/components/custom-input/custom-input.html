@@ -1,0 +1,30 @@
+<div class="w-full">
+  @let localControl = control();
+
+  <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">
+    {{ label() }}
+  </label>
+
+  <div class="relative">
+    <input
+      [formControl]="$any(localControl)"
+      [type]="type()"
+      [attr.placeholder]="placeholder()"
+      class="w-full bg-[#2a2d36] text-white placeholder:text-gray-500 placeholder:opacity-100 rounded-lg p-4 outline-none focus:ring-2 focus:ring-cyan-500"
+      [class.border-red-500]="localControl !== null && localControl.invalid && localControl.touched"
+      [class.border]="localControl !== null && localControl.invalid && localControl.touched"
+    />
+
+    @if (suffix()) {
+      <span class="absolute right-4 top-4 text-gray-500 font-medium">
+        {{ suffix() }}
+      </span>
+    }
+  </div>
+
+  @if (localControl !== null && localControl.invalid && localControl.touched) {
+    <small class="text-red-400 text-xs mt-2 block font-medium">
+      {{ errorMessage() }}
+    </small>
+  }
+</div>
