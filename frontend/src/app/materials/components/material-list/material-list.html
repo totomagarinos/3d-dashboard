@@ -1,0 +1,161 @@
+@let materialList = materials();
+<div class="p-8 bg-[#0f1115] min-h-screen text-white">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-left text-2xl sm:text-3xl text-white font-bold max-w-4xl mx-auto">
+      Inventario de Materiales
+    </h1>
+    <button
+      (click)="openModal()"
+      class="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 px-6 rounded-lg transition-colors cursor-pointer"
+    >
+      Nuevo Material
+    </button>
+  </div>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto mt-6 sm:mt-8 w-full"
+  >
+    @for (material of materialList.values(); track material._id) {
+      <div
+        class="bg-[#1a1a1d] border border-gray-700 text-white shadow-md text-start rounded-xl min-w-0"
+      >
+        <div class="bg-gray-800 h-24 sm:h-28 md:h-32 flex items-center justify-center rounded-t-xl">
+          <p class="text-gray-500">IMAGE</p>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl sm:text-2xl font-semibold wrap-break-word">{{ material.type }}</h3>
+          <p class="text-gray-400 wrap-break-word">{{ material.brand }}</p>
+          <p class="text-gray-400">{{ material.weight }}g</p>
+          <p class="text-[#00e5ff] font-bold">
+            {{ material.price | currency: 'ARS' : 'symbol' : '1.0-2' }}
+          </p>
+          <div class="flex items-center justify-end gap-3 mt-4">
+            <button
+              (click)="openModal(material)"
+              class="text-gray-500 hover:text-cyan-400 transition-colors cursor-pointer"
+              aria-label="Editar material"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                class="w-6 h-6"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+                />
+              </svg>
+            </button>
+            <button
+              (click)="openDeleteModal(material._id)"
+              class="text-gray-500 hover:text-red-400 transition-colors cursor-pointer"
+              aria-label="Eliminar material"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                class="w-6 h-6"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div
+        class="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-600 bg-[#1a1a1d]/80 px-8 py-16 sm:py-20 text-center"
+      >
+        <div
+          class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800/80 text-cyan-500/90 ring-1 ring-gray-600/60"
+          aria-hidden="true"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-9 w-9"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+            />
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-white sm:text-2xl">
+          No hay materiales en el inventario
+        </h2>
+        <p class="mt-2 max-w-md text-sm text-gray-400 sm:text-base">
+          Añade tu primer material con el botón
+          <span class="font-medium text-cyan-400/90">Nuevo Material</span>.
+        </p>
+      </div>
+    }
+  </div>
+
+  @if (isModalOpen()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-[#1a1c23] w-full max-w-lg rounded-2xl border border-gray-500 shadow-2xl p-8 relative"
+      >
+        <button
+          (click)="closeModal()"
+          class="absolute top-4 right-5 text-gray-500 hover:text-white text-2xl cursor-pointer"
+        >
+          X
+        </button>
+        <h2 class="text-2xl font-bold mb-6">
+          {{ selectedMaterial()?._id ? 'Editar Material' : 'Nuevo Material' }}
+        </h2>
+        <app-material-form [id]="selectedMaterial()?._id ?? null" (closeForm)="closeModal()" />
+      </div>
+    </div>
+  }
+
+  @if (materialToDelete()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-[#1a1c23] w-full max-w-sm rounded-2xl border border-red-900/50 shadow-2xl p-8 relative text-center"
+      >
+        <div
+          class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 pb-2"
+        >
+          <span class="text-3xl text-red-500">⚠️</span>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-2 text-white">¿Eliminar material?</h2>
+        <p class="text-gray-400 mb-8 text-sm">
+          Esta acción no se puede deshacer. El plástico será borrado de tu inventario
+          permanentemente.
+        </p>
+
+        <div class="flex justify-center gap-4">
+          <button
+            (click)="closeDeleteModal()"
+            class="px-6 py-2 rounded-lg font-bold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+          >
+            Cancelar
+          </button>
+
+          <button
+            (click)="confirmDelete()"
+            class="px-6 py-2 rounded-lg font-bold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-[0_0_15px_rgba(239,68,68,0.3)]"
+          >
+            Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

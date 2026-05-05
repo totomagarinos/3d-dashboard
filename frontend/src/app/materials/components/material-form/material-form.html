@@ -1,0 +1,45 @@
+<form [formGroup]="materialForm" (ngSubmit)="onSubmit()" class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <app-custom-input
+      [control]="materialForm.get('type')"
+      label="Tipo de Material"
+      type="text"
+      placeholder="Ej: PLA, PETG"
+    >
+    </app-custom-input>
+
+    <app-custom-input
+      [control]="materialForm.get('brand')"
+      label="Marca"
+      type="text"
+      placeholder="Ej: Grilon3, Printalot"
+    >
+    </app-custom-input>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <app-custom-input [control]="materialForm.get('weight')" label="Peso del rollo" suffix="gramos">
+    </app-custom-input>
+
+    <app-custom-input [control]="materialForm.get('price')" label="Precio total" suffix="$">
+    </app-custom-input>
+  </div>
+
+  <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-700/60">
+    <button
+      type="button"
+      (click)="closeForm.emit()"
+      class="px-6 py-3 rounded-lg font-bold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors cursor-pointer"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="submit"
+      [disabled]="materialForm.invalid"
+      class="px-6 py-3 rounded-lg font-bold bg-[#00e5ff] text-gray-900 hover:bg-cyan-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#00e5ff] cursor-pointer"
+    >
+      Guardar Material
+    </button>
+  </div>
+</form>
