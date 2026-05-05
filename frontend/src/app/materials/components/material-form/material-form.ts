@@ -1,5 +1,6 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { catchError, of } from 'rxjs';
 import { MaterialService } from '../../services/material.service';
 import { CreateMaterialDTO } from '../../models/material.model';
 import { CustomInput } from '../../../shared/components';
@@ -22,6 +23,9 @@ export class MaterialForm {
   readonly closeForm = output<void>();
 
   private readonly materialService = inject(MaterialService);
+
+  error = signal<string | null>(null);
+  loading = signal<boolean>(false);
 
   materialForm = new FormGroup<MaterialFormType>({
     type: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -54,6 +58,9 @@ export class MaterialForm {
   onSubmit(): void {
     if (this.materialForm.invalid) return;
 
+    this.error.set(null);
+    this.loading.set(true);
+
     const rawForm = this.materialForm.getRawValue();
 
     const formData: CreateMaterialDTO = {
@@ -64,15 +71,22 @@ export class MaterialForm {
     };
 
     const currentId = this.id();
+    const operation$ = currentId
+      ? this.materialService.updateMaterial(currentId, formData)
+      : this.materialService.createMaterial(formData);
 
-    if (currentId) {
-      this.materialService.updateMaterial(currentId, formData).subscribe(() => {
-        this.closeForm.emit();
+    operation$
+      .pipe(
+        catchError((err) => {
+          this.error.set(err?.message || 'Error al guardar el material. Intentalo de nuevo.');
+          return of(null);
+        }),
+      )
+      .subscribe(() => {
+        this.loading.set(false);
+        if (!this.error()) {
+          this.closeForm.emit();
+        }
       });
-    } else {
-      this.materialService.createMaterial(formData).subscribe(() => {
-        this.closeForm.emit();
-      });
-    }
   }
 }

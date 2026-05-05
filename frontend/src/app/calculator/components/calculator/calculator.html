@@ -24,11 +24,7 @@
           label="Tiempo de impresión"
           suffix="horas"
         />
-        <app-custom-input
-          [control]="calculatorForm.get('grams')"
-          label="Gramos"
-          suffix="gramos"
-        />
+        <app-custom-input [control]="calculatorForm.get('grams')" label="Gramos" suffix="gramos" />
       </div>
 
       <div class="grid grid-cols-2 gap-6">
@@ -109,18 +105,6 @@
         <div class="flex justify-between items-center py-2 border-b border-gray-700">
           <span class="text-gray-400">Precio Material</span>
           <span class="font-semibold">{{ result()?.materialCost || 0 | number: '1.2-2' }}</span>
-        </div>
-        <div class="flex justify-between items-center py-2 border-b border-gray-700">
-          <span class="text-gray-400">Precio Luz</span>
-          <span class="font-semibold">{{ result()?.electricityCost || 0 | number: '1.2-2' }}</span>
-        </div>
-        <div class="flex justify-between items-center py-2 border-b border-gray-700">
-          <span class="text-gray-400">Desgaste de la máquina</span>
-          <span class="font-semibold">{{ result()?.machineWear || 0 | number: '1.2-2' }}</span>
-        </div>
-        <div class="flex justify-between items-center py-2 border-b border-gray-700">
-          <span class="text-gray-400">Margen de error</span>
-          <span class="font-semibold">{{ result()?.errorMargin || 0 | number: '1.2-2' }}</span>
         </div>
       </div>
     </div>

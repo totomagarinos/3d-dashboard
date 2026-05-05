@@ -1,4 +1,10 @@
 <form [formGroup]="materialForm" (ngSubmit)="onSubmit()" class="space-y-6">
+  @if (error()) {
+    <div class="bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-lg">
+      {{ error() }}
+    </div>
+  }
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <app-custom-input
       [control]="materialForm.get('type')"
@@ -29,17 +35,22 @@
     <button
       type="button"
       (click)="closeForm.emit()"
-      class="px-6 py-3 rounded-lg font-bold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors cursor-pointer"
+      [disabled]="loading()"
+      class="px-6 py-3 rounded-lg font-bold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors cursor-pointer disabled:opacity-50"
     >
       Cancelar
     </button>
 
     <button
       type="submit"
-      [disabled]="materialForm.invalid"
+      [disabled]="materialForm.invalid || loading()"
       class="px-6 py-3 rounded-lg font-bold bg-[#00e5ff] text-gray-900 hover:bg-cyan-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#00e5ff] cursor-pointer"
     >
-      Guardar Material
+      @if (loading()) {
+        Guardando...
+      } @else {
+        Guardar Material
+      }
     </button>
   </div>
 </form>

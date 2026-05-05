@@ -13,7 +13,7 @@ export class MaterialController {
 
       const newMaterial = await MaterialService.createMaterial(validatedData);
 
-      res.status(201).json({ newMaterial });
+      res.status(201).json(newMaterial);
     } catch (error) {
       res.status(400).json({ error: "Invalid data or server error." });
     }
@@ -41,7 +41,7 @@ export class MaterialController {
         validatedData,
       );
 
-      res.status(200).json({ updatedMaterial });
+      res.status(200).json(updatedMaterial);
     } catch (error) {
       res.status(400).json({ error: "Error updating material." });
     }
@@ -52,7 +52,7 @@ export class MaterialController {
       const { id } = req.params;
       const deletedMaterial = await MaterialService.deleteMaterial(id);
 
-      res.status(200).json({ deletedMaterial });
+      res.status(200).json(deletedMaterial);
     } catch (error) {
       res.status(500).json({ error: "Error deleting material." });
     }
