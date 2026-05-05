@@ -1,0 +1,128 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto p-6">
+  <div
+    class="lg:col-span-2 bg-[#1a1c23] rounded-2xl p-8 text-white border border-gray-500 shadow-xl h-fit"
+  >
+    <h2 class="text-3xl font-bold mb-8">Calculadora</h2>
+
+    <form id="calc-form" [formGroup]="calculatorForm" class="space-y-8">
+      <div>
+        <label
+          for="material-select"
+          class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider"
+        >
+          Material de impresión
+        </label>
+        <app-custom-select
+          formControlName="material"
+          [options]="materialsArray()"
+        ></app-custom-select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <app-custom-input
+          [control]="calculatorForm.get('hours')"
+          label="Tiempo de impresión"
+          suffix="horas"
+        />
+        <app-custom-input
+          [control]="calculatorForm.get('grams')"
+          label="Gramos"
+          suffix="gramos"
+        />
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <app-custom-input
+          [control]="calculatorForm.get('suppliesPrice')"
+          label="Insumos"
+          suffix="$"
+        />
+
+        <div>
+          <label
+            for="multiplier-input"
+            class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider"
+          >
+            Factor multiplicador
+          </label>
+          <div class="grid grid-cols-4 gap-2">
+            <button
+              type="button"
+              (click)="calculatorForm.controls.profitMultiplier.setValue(2)"
+              [class.bg-cyan-400]="calculatorForm.value.profitMultiplier === 2"
+              [class.text-gray-900]="calculatorForm.value.profitMultiplier === 2"
+              class="bg-[#2a2d36] text-gray-400 rounded-lg py-4 font-bold hover:bg-gray-700 transition-colors"
+            >
+              x2
+            </button>
+            <button
+              type="button"
+              (click)="calculatorForm.controls.profitMultiplier.setValue(3)"
+              [class.bg-cyan-400]="calculatorForm.value.profitMultiplier === 3"
+              [class.text-gray-900]="calculatorForm.value.profitMultiplier === 3"
+              class="bg-[#2a2d36] text-gray-400 rounded-lg py-4 font-bold hover:bg-gray-700 transition-colors"
+            >
+              x3
+            </button>
+            <button
+              type="button"
+              (click)="calculatorForm.controls.profitMultiplier.setValue(4)"
+              [class.bg-cyan-400]="calculatorForm.value.profitMultiplier === 4"
+              [class.text-gray-900]="calculatorForm.value.profitMultiplier === 4"
+              class="bg-[#2a2d36] text-gray-400 rounded-lg py-4 font-bold hover:bg-gray-700 transition-colors"
+            >
+              x4
+            </button>
+            <input
+              type="number"
+              step="0.1"
+              formControlName="profitMultiplier"
+              class="bg-[#2a2d36] text-gray-400 font-bold rounded-lg py-4 px-2 text-center outline-none focus:ring-2 focus:ring-cyan-500 hide-arrows"
+              placeholder="Otro"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="bg-[#1a1c23] rounded-2xl p-8 text-white border border-gray-500 shadow-xl">
+    <div>
+      <h3 class="text-3xl font-bold mb-2">Cotización final</h3>
+      <p class="text-gray-400 mb-6">Total a cobrar</p>
+
+      <div class="flex justify-center items-baseline bg-[#2a2d36] rounded-xl p-6 mb-6">
+        <span class="text-gray-400 text-md font-bold">ARS</span>
+        <span class="text-4xl font-bold text-[#00e5ff] ml-3">{{
+          result()?.totalToCharge || 0 | number: '1.2-2'
+        }}</span>
+      </div>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Costo total (sin insumos)</span>
+          <span class="font-semibold">{{ result()?.totalCost || 0 | number: '1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Insumos</span>
+          <span class="font-semibold">{{ result()?.supplies || 0 | number: '1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Precio Material</span>
+          <span class="font-semibold">{{ result()?.materialCost || 0 | number: '1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Precio Luz</span>
+          <span class="font-semibold">{{ result()?.electricityCost || 0 | number: '1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Desgaste de la máquina</span>
+          <span class="font-semibold">{{ result()?.machineWear || 0 | number: '1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-700">
+          <span class="text-gray-400">Margen de error</span>
+          <span class="font-semibold">{{ result()?.errorMargin || 0 | number: '1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
