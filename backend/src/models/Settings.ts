@@ -6,7 +6,6 @@ export interface ISettings {
   machineWearPerHour: number;
   partsPrice: number;
   errorMarginPercentage: number;
-  laborCostPerHour: number;
 }
 
 const settingsSchema = new Schema<ISettings>(
@@ -16,7 +15,6 @@ const settingsSchema = new Schema<ISettings>(
     machineWearPerHour: { type: Number, required: true, default: 0 },
     partsPrice: { type: Number, required: true, default: 0 },
     errorMarginPercentage: { type: Number, required: true, default: 0 },
-    laborCostPerHour: { type: Number, required: true, default: 0 },
   },
   {
     timestamps: true,

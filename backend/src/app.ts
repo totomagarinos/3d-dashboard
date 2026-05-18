@@ -6,6 +6,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
 import { limiter } from "./helpers/rateLimit";
+import { settingsRouter } from "./routes/settings.routes";
 
 const app = express();
 const DB_URL =
@@ -22,11 +23,14 @@ mongoose
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors({
-  origin: process.env.NODE_ENV === 'prod' 
-    ? ['https://tu-dominio-production.com'] 
-    : ['http://localhost:4200']
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "prod"
+        ? ["https://tu-dominio-production.com"]
+        : ["http://localhost:4200"],
+  }),
+);
 
 if (process.env.NODE_ENV === "prod") {
   app.use(compression());
@@ -35,5 +39,6 @@ if (process.env.NODE_ENV === "prod") {
 app.use(express.json());
 
 app.use("/api/materials", materialRouter);
+app.use("/api/settings", settingsRouter);
 
 export default app;

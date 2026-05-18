@@ -8,6 +8,7 @@ import { MaterialService } from '../../../materials/services/material.service';
 import { CustomInput, CustomSelect } from '../../../shared/components';
 import { StorageService } from '../../../shared/services/storage.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SettingsService } from '../../../settings/services/settings.service';
 import { debounceTime } from 'rxjs';
 
 @Component({
@@ -19,13 +20,14 @@ import { debounceTime } from 'rxjs';
 export class Calculator implements OnInit {
   protected readonly calculatorService = inject(CalculatorService);
   protected readonly materialService = inject(MaterialService);
+  protected readonly settingsService = inject(SettingsService);
+
   private destroyRef = inject(DestroyRef);
   private storageService = inject(StorageService);
 
   private readonly STORAGE_KEY = 'calculator_draft';
 
   materials = this.materialService.materials;
-
   materialsArray = computed(() => Array.from(this.materials().values()));
 
   calculatorForm = new FormGroup({
@@ -38,18 +40,43 @@ export class Calculator implements OnInit {
       validators: [Validators.required, Validators.min(0.1)],
     }),
     material: new FormControl<Material | null>(null),
-    electricityPricePerKwH: new FormControl(140, { nonNullable: true }),
-    consumptionWatts: new FormControl(120, { nonNullable: true }),
-    machineWearPerHour: new FormControl(4320, { nonNullable: true }),
-    partsPrice: new FormControl(150000, { nonNullable: true }),
     suppliesPrice: new FormControl(0, { nonNullable: true }),
-    errorMarginPercentage: new FormControl(5, { nonNullable: true }),
     profitMultiplier: new FormControl<number | null>(null),
   });
 
   result = signal<CalculatorOutput | null>(null);
+  error = signal<string | null>(null);
 
   ngOnInit(): void {
+    // 1. Restaurar auto-guardado primero
+    const savedForm = this.storageService.getData(this.STORAGE_KEY);
+    if (savedForm) {
+      this.calculatorForm.patchValue(savedForm);
+    }
+
+    const savedResult = this.storageService.getData<CalculatorOutput>(this.STORAGE_KEY + '_result');
+    if (savedResult) {
+      this.result.set(savedResult);
+    }
+
+    // 2. Cargar settings y calcular si hay material
+    if (!this.settingsService.settingsData()) {
+      this.settingsService
+        .loadSettings()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            if (this.calculatorForm.getRawValue().material) {
+              this.calculate();
+            }
+          },
+          error: () => this.error.set('Error al cargar los costos fijos.'),
+        });
+    } else if (this.calculatorForm.getRawValue().material) {
+      this.calculate();
+    }
+
+    // 3. Subscribir valueChanges para futuros cambios del usuario
     this.calculatorForm.valueChanges
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((actualValues) => {
@@ -61,37 +88,27 @@ export class Calculator implements OnInit {
           this.result.set(null);
         }
       });
-
-    const savedForm = this.storageService.getData(this.STORAGE_KEY);
-    if (savedForm) {
-      this.calculatorForm.patchValue(savedForm);
-    }
-
-    const savedResult = this.storageService.getData<CalculatorOutput>(this.STORAGE_KEY + '_result');
-    if (savedResult) {
-      this.result.set(savedResult);
-    }
   }
 
   calculate() {
     const formValue = this.calculatorForm.getRawValue();
+    const settings = this.settingsService.settingsData();
 
     const material = formValue.material;
-    if (material == null) {
-      return;
-    }
+    if (!material || !settings) return;
 
     const input: CalculatorInput = {
       grams: formValue.grams,
       hours: formValue.hours,
       material,
-      electricityPricePerKwH: formValue.electricityPricePerKwH,
-      consumptionWatts: formValue.consumptionWatts,
-      machineWearPerHour: formValue.machineWearPerHour,
-      partsPrice: formValue.partsPrice,
       suppliesPrice: formValue.suppliesPrice,
-      errorMarginPercentage: formValue.errorMarginPercentage,
       profitMultiplier: formValue.profitMultiplier ?? 2,
+
+      electricityPricePerKwH: settings.electricityPricePerKwH,
+      consumptionWatts: settings.consumptionWatts,
+      machineWearPerHour: settings.machineWearPerHour,
+      partsPrice: settings.partsPrice,
+      errorMarginPercentage: settings.errorMarginPercentage,
     };
 
     const output = this.calculatorService.calculate(input);

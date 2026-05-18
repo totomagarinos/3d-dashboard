@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import { SettingsService } from "../services/settings.service";
+import { parse } from "valibot";
+import { UpdateSettingsSchema } from "../schemas/settings.schema";
 
 export class SettingsController {
   static get = async (req: Request, res: Response) => {
@@ -13,10 +15,10 @@ export class SettingsController {
 
   static update = async (req: Request, res: Response) => {
     try {
-      const dataToUpdate = req.body;
+      const validatedData = parse(UpdateSettingsSchema, req.body);
 
       const updatedSettings =
-        await SettingsService.updateSettings(dataToUpdate);
+        await SettingsService.updateSettings(validatedData);
 
       res.status(200).json(updatedSettings);
     } catch (error) {

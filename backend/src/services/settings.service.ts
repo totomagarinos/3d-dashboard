@@ -13,7 +13,6 @@ export class SettingsService {
           machineWearPerHour: 4320,
           partsPrice: 150000,
           errorMarginPercentage: 5,
-          laborCostPerHour: 2000,
         });
       }
 

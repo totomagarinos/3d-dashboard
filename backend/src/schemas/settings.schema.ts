@@ -13,7 +13,6 @@ export const SettingsSchema = object({
   machineWearPerHour: pipe(number(), minValue(0)),
   partsPrice: pipe(number(), minValue(0)),
   errorMarginPercentage: pipe(number(), minValue(0)),
-  laborCostPerHour: pipe(number(), minValue(0)),
 });
 
 export const UpdateSettingsSchema = partial(SettingsSchema);

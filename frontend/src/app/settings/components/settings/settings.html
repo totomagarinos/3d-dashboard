@@ -1,0 +1,62 @@
+<div class="max-w-4xl mx-auto p-6">
+  <div class="bg-[#101012] rounded-xl p-8 text-white border border-gray-500 shadow-xl">
+    <h1 class="text-3xl font-bold mb-8">Ajustes / Costos Fijos</h1>
+
+    @if (error()) {
+      <div
+        role="alert"
+        class="bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded-lg mb-6"
+      >
+        {{ error() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="bg-green-900/50 border border-green-500 text-green-400 px-4 py-3 rounded-lg mb-6">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="calculatorForm" (ngSubmit)="onSubmit()" class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <app-custom-input
+          [control]="calculatorForm.get('electricityPricePerKwH')"
+          label="Precio electricidad"
+          suffix="$/kWh"
+        />
+        <app-custom-input
+          [control]="calculatorForm.get('consumptionWatts')"
+          label="Consumo impresora"
+          suffix="W"
+        />
+        <app-custom-input
+          [control]="calculatorForm.get('machineWearPerHour')"
+          label="Desgaste máquina"
+          suffix="$/h"
+        />
+        <app-custom-input
+          [control]="calculatorForm.get('partsPrice')"
+          label="Precio impresora"
+          suffix="$"
+        />
+        <app-custom-input
+          [control]="calculatorForm.get('errorMarginPercentage')"
+          label="Margen de error"
+          suffix="%"
+        />
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="w-full bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 rounded-lg transition-colors"
+      >
+        @if (loading()) {
+          Guardando…
+        } @else {
+          Guardar cambios
+        }
+      </button>
+    </form>
+  </div>
+</div>
