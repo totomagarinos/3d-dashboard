@@ -107,9 +107,17 @@
           <span class="font-semibold">{{ result()?.materialCost || 0 | number: '1.2-2' }}</span>
         </div>
       </div>
-      <div>
-        <button>Añadir al registro</button>
-      </div>
+      @if (result()) {
+        <div class="mt-8">
+          <button
+            (click)="saveOrder()"
+            [disabled]="savingOrder()"
+            class="w-full bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors cursor-pointer"
+          >
+            {{ savingOrder() ? 'Guardando...' : 'Guardar presupuesto' }}
+          </button>
+        </div>
+      }
     </div>
   </div>
 </div>

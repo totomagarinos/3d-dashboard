@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SettingsService } from '../../../settings/services/settings.service';
 import { debounceTime } from 'rxjs';
 import { OrderService } from '../../../orders/services/order.service';
+import { CreateOrderDTO } from '../../../orders/models/order.model';
 
 @Component({
   selector: 'app-calculator',
@@ -22,6 +23,7 @@ export class Calculator implements OnInit {
   protected readonly calculatorService = inject(CalculatorService);
   protected readonly materialService = inject(MaterialService);
   protected readonly settingsService = inject(SettingsService);
+  protected readonly orderService = inject(OrderService);
 
   private destroyRef = inject(DestroyRef);
   private storageService = inject(StorageService);
@@ -47,6 +49,7 @@ export class Calculator implements OnInit {
 
   result = signal<CalculatorOutput | null>(null);
   error = signal<string | null>(null);
+  savingOrder = signal<boolean>(false);
 
   ngOnInit(): void {
     // 1. Restaurar auto-guardado primero
@@ -116,5 +119,42 @@ export class Calculator implements OnInit {
     this.result.set(output);
 
     this.storageService.setData(this.STORAGE_KEY + '_result', output);
+  }
+
+  saveOrder() {
+    const formValue = this.calculatorForm.getRawValue();
+    const output = this.result();
+    const settings = this.settingsService.settingsData();
+    const material = formValue.material;
+
+    if (!material || !settings || !output) return;
+
+    this.savingOrder.set(true);
+
+    const order: CreateOrderDTO = {
+      title: `Presupuesto - ${material.type} ${material.brand} - ${new Date().toLocaleDateString()}`,
+      grams: Number(formValue.grams),
+      hours: Number(formValue.hours),
+      suppliesPrice: Number(formValue.suppliesPrice),
+      profitMultiplier: formValue.profitMultiplier ?? 2,
+      material: {
+        type: material.type,
+        brand: material.brand,
+        weight: Number(material.weight),
+        price: Number(material.price),
+      },
+      settings: { ...settings },
+      output: { ...output },
+    };
+
+    this.orderService.createOrder(order).subscribe({
+      next: () => {
+        this.savingOrder.set(false);
+      },
+      error: () => {
+        this.savingOrder.set(false);
+        this.error.set('Error al guardar el presupuesto.');
+      },
+    });
   }
 }

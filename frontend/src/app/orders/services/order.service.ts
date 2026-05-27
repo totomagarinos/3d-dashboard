@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { MonthlySummary, Order } from '../models/order.model';
+import { CreateOrderDTO, MonthlySummary, Order } from '../models/order.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
@@ -24,6 +24,14 @@ export class OrderService {
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
         this._orders.set(sorted);
+      }),
+    );
+  }
+
+  createOrder(orderDTO: CreateOrderDTO): Observable<Order> {
+    return this.http.post<Order>(this.baseUrl, orderDTO).pipe(
+      tap((newOrder) => {
+        this._orders.update((prev) => [newOrder, ...prev]);
       }),
     );
   }

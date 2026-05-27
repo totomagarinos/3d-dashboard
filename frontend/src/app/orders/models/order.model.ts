@@ -36,3 +36,5 @@ export interface MonthlySummary {
   totalProfit: number;
   orderCount: number;
 }
+
+export type CreateOrderDTO = Omit<Order, '_id' | 'createdAt' | 'updatedAt'>;
