@@ -11,11 +11,11 @@ import { MaterialForm } from '../material-form/material-form';
   styleUrl: './material-list.css',
 })
 export class MaterialList {
-  materialToDelete = signal<string | null>(null);
   protected readonly materialService = inject(MaterialService);
 
   materials = this.materialService.materials;
 
+  materialToDelete = signal<string | null>(null);
   isModalOpen = signal(false);
   selectedMaterial = signal<Material | null>(null);
 

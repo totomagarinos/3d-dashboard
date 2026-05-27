@@ -1,10 +1,10 @@
 import { parse } from "valibot";
-import {
-  CreateMaterialSchema,
-  UpdateMaterialSchema,
-} from "../schemas/material.schema";
-import { MaterialService } from "../services/material.service";
 import type { Request, Response } from "express";
+import { CreateMaterialSchema, UpdateMaterialSchema } from "../schemas";
+import { MaterialService } from "../services";
+
+const isCastError = (error: unknown): error is Error & { name: "CastError" } =>
+  error instanceof Error && error.name === "CastError";
 
 export class MaterialController {
   static create = async (req: Request, res: Response) => {
@@ -52,9 +52,17 @@ export class MaterialController {
       const { id } = req.params;
       const deletedMaterial = await MaterialService.deleteMaterial(id);
 
-      res.status(200).json(deletedMaterial);
+      if (!deletedMaterial) {
+        return res.status(404).json({ error: "Material not found." });
+      }
+
+      return res.status(200).json(deletedMaterial);
     } catch (error) {
-      res.status(500).json({ error: "Error deleting material." });
+      if (isCastError(error)) {
+        return res.status(400).json({ error: "Invalid material ID." });
+      }
+
+      return res.status(500).json({ error: "Error deleting material." });
     }
   };
 }

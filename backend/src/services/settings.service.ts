@@ -1,5 +1,5 @@
-import { Settings } from "../models/Settings";
-import type { UpdateSettingsDTO } from "../schemas/settings.schema";
+import { Settings } from "../models";
+import type { UpdateSettingsDTO } from "../schemas";
 
 export class SettingsService {
   static getSettings = async () => {
@@ -18,7 +18,7 @@ export class SettingsService {
 
       return settings;
     } catch (error) {
-      throw new Error("Error al obtener los ajustes de la base de datos.");
+      throw new Error("Error fetching settings from database.");
     }
   };
 
@@ -31,7 +31,7 @@ export class SettingsService {
 
       return updatedSettings;
     } catch (error) {
-      throw new Error("Error al actualizar los ajustes.");
+      throw new Error("Error updating settings.");
     }
   };
 }

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { SettingsService } from "../services/settings.service";
 import { parse } from "valibot";
-import { UpdateSettingsSchema } from "../schemas/settings.schema";
+import { SettingsService } from "../services";
+import { UpdateSettingsSchema } from "../schemas";
 
 export class SettingsController {
   static get = async (req: Request, res: Response) => {

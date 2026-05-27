@@ -10,6 +10,7 @@ import { StorageService } from '../../../shared/services/storage.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SettingsService } from '../../../settings/services/settings.service';
 import { debounceTime } from 'rxjs';
+import { OrderService } from '../../../orders/services/order.service';
 
 @Component({
   selector: 'app-calculator',
@@ -101,7 +102,7 @@ export class Calculator implements OnInit {
       grams: formValue.grams,
       hours: formValue.hours,
       material,
-      suppliesPrice: formValue.suppliesPrice,
+      suppliesPrice: formValue.suppliesPrice * 1.3,
       profitMultiplier: formValue.profitMultiplier ?? 2,
 
       electricityPricePerKwH: settings.electricityPricePerKwH,

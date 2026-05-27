@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { SettingsController } from "../controllers/settings.controller";
+import { SettingsController } from "../controllers";
 
 export const settingsRouter = Router();
 

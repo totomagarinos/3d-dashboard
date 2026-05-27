@@ -78,7 +78,7 @@ export class MaterialForm {
     operation$
       .pipe(
         catchError((err) => {
-          this.error.set(err?.message || 'Error al guardar el material. Intentalo de nuevo.');
+          this.error.set('Error al guardar el material. Intentalo de nuevo.');
           return of(null);
         }),
       )

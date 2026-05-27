@@ -99,13 +99,16 @@
           <span class="font-semibold">{{ result()?.totalCost || 0 | number: '1.2-2' }}</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b border-gray-700">
-          <span class="text-gray-400">Insumos</span>
+          <span class="text-gray-400">Insumos (+30%)</span>
           <span class="font-semibold">{{ result()?.supplies || 0 | number: '1.2-2' }}</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b border-gray-700">
           <span class="text-gray-400">Precio Material</span>
           <span class="font-semibold">{{ result()?.materialCost || 0 | number: '1.2-2' }}</span>
         </div>
+      </div>
+      <div>
+        <button>Añadir al registro</button>
       </div>
     </div>
   </div>

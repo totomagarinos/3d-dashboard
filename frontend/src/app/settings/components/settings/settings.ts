@@ -56,7 +56,7 @@ export class Settings implements OnInit {
         .loadSettings()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          error: () => this.error.set('Error al cargar configuraciones'),
+          error: () => this.error.set('Error al cargar configuraciones.'),
         });
     }
   }
