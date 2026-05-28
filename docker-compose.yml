@@ -1,0 +1,52 @@
+services:
+  # 1. BASE DE DATOS
+  mongodb:
+    image: mongo:latest
+    container_name: 3d-mongo-prod
+    restart: always
+    # ports:
+    #   - "27017:27017"
+    volumes:
+      - mongo_data:/data/db # Esto hace que los datos no se borren si el contenedor se apaga
+    networks:
+      - app_network
+
+  # 2. BACKEND (API en Bun)
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 3d-api-prod
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=prod
+      - DB_URL=mongodb://mongodb:27017/3d-dashboard
+    depends_on:
+      - mongodb
+    networks:
+      - app_network
+
+  # 3. FRONTEND (Tu App en Angular + Nginx)
+  web:
+    build:
+      context: ./frontend # Ruta hacia la carpeta de tu frontend
+      dockerfile: Dockerfile
+    container_name: 3d-web-prod
+    restart: always
+    ports:
+      - "80:80" # Nginx escucha en el puerto 80 (el puerto web estándar)
+    depends_on:
+      - api # Espera a que la API esté viva antes de servir la web
+    networks:
+      - app_network
+
+# Definimos el disco duro virtual para que los materiales y cotizaciones sobrevivan
+volumes:
+  mongo_data:
+
+# Definimos una red privada para que los contenedores hablen entre sí de forma segura
+networks:
+  app_network:
+    driver: bridge

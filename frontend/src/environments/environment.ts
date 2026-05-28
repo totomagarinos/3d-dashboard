@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://tu-api-production.com/api/materials',
-  settingsApiUrl: 'https://tu-api-production.com/api/settings',
-  ordersApiUrl: 'https://tu-api-production.com/api/orders',
+  apiUrl: 'http://localhost:4000/api/materials',
+  settingsApiUrl: 'http://localhost:4000/api/settings',
+  ordersApiUrl: 'http://localhost:4000/api/orders',
   useFallback: false,
 };

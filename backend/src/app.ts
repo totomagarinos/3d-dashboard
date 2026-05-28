@@ -11,7 +11,7 @@ const app = express();
 const DB_URL =
   process.env.NODE_ENV === "test"
     ? "mongodb://localhost:27018/3d-dashboard-test"
-    : process.env.DB_URL_DEV || "mongodb://localhost:27018/3d-dashboard";
+    : process.env.DB_URL || "mongodb://localhost:27018/3d-dashboard";
 
 mongoose
   .connect(DB_URL)
@@ -26,7 +26,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === "prod"
-        ? ["https://tu-dominio-production.com"]
+        ? ["http://localhost"]
         : ["http://localhost:4200"],
   }),
 );
