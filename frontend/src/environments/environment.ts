@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:4000/api/materials',
-  settingsApiUrl: 'http://localhost:4000/api/settings',
-  ordersApiUrl: 'http://localhost:4000/api/orders',
+  apiUrl: 'https://3dcostmanager.com/api/materials',
+  settingsApiUrl: 'https://3dcostmanager.com/api/settings',
+  ordersApiUrl: 'https://3dcostmanager.com/api/orders',
   useFallback: false,
 };

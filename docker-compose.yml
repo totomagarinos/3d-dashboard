@@ -5,9 +5,9 @@ services:
     container_name: 3d-mongo-prod
     restart: always
     # ports:
-    #   - "27017:27017"
+    #   - "27017:27017" # Protegida en la red interna
     volumes:
-      - mongo_data:/data/db # Esto hace que los datos no se borren si el contenedor se apaga
+      - mongo_data:/data/db
     networks:
       - app_network
 
@@ -18,8 +18,8 @@ services:
       dockerfile: Dockerfile
     container_name: 3d-api-prod
     restart: always
-    ports:
-      - "4000:4000"
+    # ports:
+    #   - "4000:4000" # <-- COMENTADO: Ahora está protegida, Nginx habla con ella internamente
     environment:
       - NODE_ENV=prod
       - DB_URL=mongodb://mongodb:27017/3d-dashboard
@@ -31,14 +31,17 @@ services:
   # 3. FRONTEND (Tu App en Angular + Nginx)
   web:
     build:
-      context: ./frontend # Ruta hacia la carpeta de tu frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: 3d-web-prod
     restart: always
     ports:
-      - "80:80" # Nginx escucha en el puerto 80 (el puerto web estándar)
+      - "80:80" # HTTP estándar (redirige a HTTPS)
+      - "443:443" # HTTPS seguro
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro # <-- CORREGIDO: Con la 'n' bien puesta
     depends_on:
-      - api # Espera a que la API esté viva antes de servir la web
+      - api
     networks:
       - app_network
 
