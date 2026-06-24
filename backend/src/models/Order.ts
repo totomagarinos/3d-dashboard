@@ -1,6 +1,8 @@
 import { model, Schema } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IOrder {
+  _id: string;
   title: string;
   clientName?: string;
   notes?: string;
@@ -84,6 +86,7 @@ const outputSchema = new Schema(
 
 const orderSchema = new Schema<IOrder>(
   {
+    _id: { type: String, default: () => uuidv4() },
     title: { type: String, required: true },
     clientName: { type: String },
     notes: { type: String },
@@ -99,6 +102,13 @@ const orderSchema = new Schema<IOrder>(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform(_doc, ret: any) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
   },
 );
 
