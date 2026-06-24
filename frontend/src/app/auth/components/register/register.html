@@ -1,0 +1,81 @@
+<div class="min-h-screen flex items-center justify-center bg-[#1e1f28] px-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-white">3D Manager</h1>
+      <p class="text-gray-400 mt-2">Crear cuenta</p>
+    </div>
+
+    <div class="bg-[#2a2d36] rounded-2xl p-8 shadow-lg">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <app-custom-input
+          class="block"
+          [control]="registerForm.get('name')"
+          label="Nombre"
+          type="string"
+          placeholder="Tu nombre"
+        />
+        <app-custom-input
+          class="block"
+          [control]="registerForm.get('email')"
+          label="Email"
+          type="email"
+          placeholder="correo@ejemplo.com"
+        />
+        <app-custom-input
+          class="block"
+          [control]="registerForm.get('password')"
+          label="Contraseña"
+          type="password"
+          placeholder="••••••••"
+        />
+
+        @if (errorMessage()) {
+          <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+            <p class="text-red-400 text-sm text-center font-medium">{{ errorMessage() }}</p>
+          </div>
+        }
+
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || isLoading()"
+          class="w-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+        >
+          @if (isLoading()) {
+            <svg
+              class="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              ></path>
+            </svg>
+            <span>Creando cuenta...</span>
+          } @else {
+            <span>Crear cuenta</span>
+          }
+        </button>
+      </form>
+
+      <p class="text-gray-400 text-sm text-center mt-6">
+        ¿Ya tenés cuenta?
+        <a
+          [routerLink]="'/' + appRoutes.public.login"
+          class="text-cyan-500 hover:text-cyan-400 font-medium transition-colors"
+          >Iniciá sesión</a
+        >
+      </p>
+    </div>
+  </div>
+</div>

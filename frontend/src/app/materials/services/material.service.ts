@@ -27,7 +27,7 @@ export class MaterialService {
 
           const fallback = [
             {
-              _id: 'abcdefg',
+              id: 'abcdefg',
               type: 'PLA',
               brand: 'Grilon',
               weight: 1000,
@@ -43,7 +43,7 @@ export class MaterialService {
         }),
       )
       .subscribe((result) => {
-        const materialsMap = new Map(result.map((m) => [m._id, m]));
+        const materialsMap = new Map(result.map((m) => [m.id, m]));
         this.#state.set(materialsMap);
       });
   }
@@ -53,7 +53,7 @@ export class MaterialService {
       tap((newMaterial) => {
         this.#state.update((previousState) => {
           const newMap = new Map(previousState);
-          newMap.set(newMaterial._id, newMaterial);
+          newMap.set(newMaterial.id, newMaterial);
           return newMap;
         });
       }),
@@ -65,7 +65,7 @@ export class MaterialService {
       tap((updatedMaterial) => {
         this.#state.update((previousState) => {
           const newMap = new Map(previousState);
-          newMap.set(updatedMaterial._id, updatedMaterial);
+          newMap.set(updatedMaterial.id, updatedMaterial);
           return newMap;
         });
       }),

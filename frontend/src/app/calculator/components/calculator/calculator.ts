@@ -6,7 +6,7 @@ import { Material } from '../../../materials/models/material.model';
 import { CalculatorInput, CalculatorOutput } from '../../models/calculator.model';
 import { MaterialService } from '../../../materials/services/material.service';
 import { CustomInput, CustomSelect } from '../../../shared/components';
-import { StorageService } from '../../../shared/services/storage.service';
+import { LocalManager } from '../../../shared/services/local-manager.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SettingsService } from '../../../settings/services/settings.service';
 import { debounceTime } from 'rxjs';
@@ -26,7 +26,7 @@ export class Calculator implements OnInit {
   protected readonly orderService = inject(OrderService);
 
   private destroyRef = inject(DestroyRef);
-  private storageService = inject(StorageService);
+  private localManager = inject(LocalManager);
 
   private readonly STORAGE_KEY = 'calculator_draft';
 
@@ -53,12 +53,12 @@ export class Calculator implements OnInit {
 
   ngOnInit(): void {
     // 1. Restaurar auto-guardado primero
-    const savedForm = this.storageService.getData(this.STORAGE_KEY);
+    const savedForm = this.localManager.getData(this.STORAGE_KEY);
     if (savedForm) {
       this.calculatorForm.patchValue(savedForm);
     }
 
-    const savedResult = this.storageService.getData<CalculatorOutput>(this.STORAGE_KEY + '_result');
+    const savedResult = this.localManager.getData<CalculatorOutput>(this.STORAGE_KEY + '_result');
     if (savedResult) {
       this.result.set(savedResult);
     }
@@ -84,7 +84,7 @@ export class Calculator implements OnInit {
     this.calculatorForm.valueChanges
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe((actualValues) => {
-        this.storageService.setData(this.STORAGE_KEY, actualValues);
+        this.localManager.setData(this.STORAGE_KEY, actualValues);
 
         if (actualValues.material) {
           this.calculate();
@@ -118,7 +118,7 @@ export class Calculator implements OnInit {
     const output = this.calculatorService.calculate(input);
     this.result.set(output);
 
-    this.storageService.setData(this.STORAGE_KEY + '_result', output);
+    this.localManager.setData(this.STORAGE_KEY + '_result', output);
   }
 
   saveOrder() {

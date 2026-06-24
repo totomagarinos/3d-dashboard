@@ -32,23 +32,23 @@
       class="absolute z-50 w-full mt-2 bg-[#1a1c23] border border-gray-700 rounded-lg shadow-2xl max-h-60 overflow-y-auto"
     >
       <div class="p-1">
-        @for (item of options(); track item._id) {
+        @for (item of options(); track item.id) {
           <button
             type="button"
             (click)="selectItem(item)"
-            [class.bg-cyan-500]="selectedValue()?._id === item._id"
-            [class.text-gray-900]="selectedValue()?._id === item._id"
+            [class.bg-cyan-500]="selectedValue()?.id === item.id"
+            [class.text-gray-900]="selectedValue()?.id === item.id"
             class="w-full text-left px-4 py-3 rounded-md hover:bg-gray-800 transition-colors flex flex-col group"
           >
             <span
               class="font-bold group-hover:text-cyan-400 transition-colors"
-              [class.!text-gray-900]="selectedValue()?._id === item._id"
+              [class.!text-gray-900]="selectedValue()?.id === item.id"
             >
               {{ item.type }}
             </span>
             <span
               class="text-sm text-gray-400"
-              [class.!text-gray-800]="selectedValue()?._id === item._id"
+              [class.!text-gray-800]="selectedValue()?.id === item.id"
             >
               {{ item.brand }} — ${{ item.price }}
             </span>

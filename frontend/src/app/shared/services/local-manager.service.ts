@@ -1,16 +1,15 @@
-import { isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
+
+export enum LocalKeys {
+  ACCESS_TOKEN = 'token',
+  REFRESH_TOKEN = 'refreshToken',
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
-  private readonly platformId = inject(PLATFORM_ID);
-
+export class LocalManager {
   getData<T>(key: string): T | null {
-    if (!isPlatformBrowser(this.platformId)) {
-      return null;
-    }
     try {
       const savedData = localStorage.getItem(key);
       if (savedData) {
@@ -24,9 +23,6 @@ export class StorageService {
   }
 
   setData<T>(key: string, data: T): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
     try {
       const jsonData = JSON.stringify(data);
       localStorage.setItem(key, jsonData);
@@ -36,9 +32,10 @@ export class StorageService {
   }
 
   removeData(key: string): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
     localStorage.removeItem(key);
+  }
+
+  clearStorage(): void {
+    localStorage.clear();
   }
 }

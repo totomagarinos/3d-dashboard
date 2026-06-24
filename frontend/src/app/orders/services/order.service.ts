@@ -47,7 +47,7 @@ export class OrderService {
   deleteOrder(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
       tap(() => {
-        this._orders.update((orders) => orders.filter((o) => o._id !== id));
+        this._orders.update((orders) => orders.filter((o) => o.id !== id));
       }),
     );
   }

@@ -1,5 +1,5 @@
 export interface Order {
-  _id: string;
+  id: string;
   title: string;
   clientName?: string;
   notes?: string;
@@ -37,4 +37,4 @@ export interface MonthlySummary {
   orderCount: number;
 }
 
-export type CreateOrderDTO = Omit<Order, '_id' | 'createdAt' | 'updatedAt'>;
+export type CreateOrderDTO = Omit<Order, 'id' | 'createdAt' | 'updatedAt'>;

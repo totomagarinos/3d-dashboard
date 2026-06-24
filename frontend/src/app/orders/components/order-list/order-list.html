@@ -45,9 +45,9 @@
     </div>
   } @else {
     <div class="space-y-3">
-      @for (order of orders(); track order._id) {
+      @for (order of orders(); track order.id) {
         <div
-          (click)="toggleOrder(order._id)"
+          (click)="toggleOrder(order.id)"
           class="bg-[#101012] border border-gray-700 rounded-xl transition-colors cursor-pointer hover:border-gray-500"
         >
           <div class="flex items-center justify-between px-6 py-5">
@@ -65,7 +65,7 @@
                 {{ order.output.totalToCharge | currency: 'ARS' : 'symbol' : '1.0-0' }}
               </span>
               <button
-                (click)="openDeleteModal(order._id); $event.stopPropagation()"
+                (click)="openDeleteModal(order.id); $event.stopPropagation()"
                 class="text-gray-500 hover:text-red-400 transition-colors cursor-pointer"
                 aria-label="Eliminar orden"
               >
@@ -76,7 +76,7 @@
             </div>
           </div>
 
-          @if (expandedOrderId() === order._id) {
+          @if (expandedOrderId() === order.id) {
             <div class="border-t border-gray-700 px-6 py-5">
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                 <div>

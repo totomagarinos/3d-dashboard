@@ -13,7 +13,7 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto mt-6 sm:mt-8 w-full"
   >
-    @for (material of materialList.values(); track material._id) {
+    @for (material of materialList.values(); track material.id) {
       <div
         class="bg-[#101012] border border-gray-700 text-white shadow-md text-start rounded-xl min-w-0"
       >
@@ -46,7 +46,7 @@
               </svg>
             </button>
             <button
-              (click)="openDeleteModal(material._id)"
+              (click)="openDeleteModal(material.id)"
               class="text-gray-500 hover:text-red-400 transition-colors cursor-pointer"
               aria-label="Eliminar material"
             >
@@ -113,9 +113,9 @@
           X
         </button>
         <h2 class="text-2xl font-bold mb-6">
-          {{ selectedMaterial()?._id ? 'Editar Material' : 'Nuevo Material' }}
+          {{ selectedMaterial()?.id ? 'Editar Material' : 'Nuevo Material' }}
         </h2>
-        <app-material-form [id]="selectedMaterial()?._id ?? null" (closeForm)="closeModal()" />
+        <app-material-form [id]="selectedMaterial()?.id ?? null" (closeForm)="closeModal()" />
       </div>
     </div>
   }

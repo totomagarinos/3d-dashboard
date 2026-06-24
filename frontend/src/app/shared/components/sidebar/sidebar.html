@@ -1,8 +1,28 @@
-<aside class="w-64 bg-[#101012] text-white flex flex-col h-screen border-r border-gray-600 fixed">
-  <div class="p-6 border-b border-gray-700">
+<!-- Backdrop: solo en mobile cuando el sidebar está abierto -->
+@if (isOpen()) {
+  <div
+    class="fixed inset-0 bg-black/50 z-30 lg:hidden"
+    (click)="close()"
+  ></div>
+}
+
+<aside
+  class="fixed z-40 top-0 left-0 h-screen w-64 bg-[#101012] text-white border-r border-gray-600 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0"
+  [class.translate-x-0]="isOpen()"
+>
+  <div class="p-6 border-b border-gray-700 flex items-center justify-between">
     <h2 class="text-2xl font-bold flex items-center gap-2">
       <span class="text-cyan-400">3D</span>Manager
     </h2>
+    <button
+      (click)="close()"
+      class="lg:hidden text-gray-400 hover:text-white cursor-pointer"
+      aria-label="Cerrar menú"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
   </div>
 
   <nav class="flex flex-col px-2 py-6 space-y-2">
@@ -10,24 +30,28 @@
       routerLink="/calculator"
       routerLinkActive="bg-gray-800 text-white border-r-4 border-cyan-400 font-semibold"
       class="block px-6 py-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+      (click)="close()"
       >Calculadora</a
     >
     <a
       routerLink="/orders"
       routerLinkActive="bg-gray-800 text-white border-r-4 border-cyan-400 font-semibold"
       class="block px-6 py-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+      (click)="close()"
       >Órdenes</a
     >
     <a
       routerLink="/materials"
       routerLinkActive="bg-gray-800 text-white border-r-4 border-cyan-400 font-semibold"
       class="block px-6 py-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+      (click)="close()"
       >Materiales</a
     >
     <a
       routerLink="/settings"
       routerLinkActive="bg-gray-800 text-white border-r-4 border-cyan-400 font-semibold"
       class="block px-6 py-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+      (click)="close()"
       >Configuración</a
     >
   </nav>
