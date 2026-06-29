@@ -1,17 +1,19 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import { parse } from "valibot";
 import { OrderService } from "../services";
 import { CreateOrderSchema } from "../schemas";
+import type { AuthenticatedRequest } from "../middlewares/auth";
 
 const isCastError = (error: unknown): error is Error & { name: "CastError" } =>
   error instanceof Error && error.name === "CastError";
 
 export class OrderController {
-  static create = async (req: Request, res: Response) => {
+  static create = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = parse(CreateOrderSchema, req.body);
+      const userId = (req.user as { userId: string }).userId;
 
-      const newOrder = await OrderService.createOrder(validatedData);
+      const newOrder = await OrderService.createOrder(validatedData, userId);
 
       res.status(201).json(newOrder);
     } catch (error) {
@@ -19,9 +21,11 @@ export class OrderController {
     }
   };
 
-  static getAll = async (req: Request, res: Response) => {
+  static getAll = async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const orders = await OrderService.getAllOrders();
+      const userId = (req.user as { userId: string }).userId;
+
+      const orders = await OrderService.getAllOrders(userId);
 
       res.status(200).json(orders);
     } catch (error) {
@@ -31,9 +35,11 @@ export class OrderController {
     }
   };
 
-  static getSummary = async (req: Request, res: Response) => {
+  static getSummary = async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const summary = await OrderService.getMonthlySummary();
+      const userId = (req.user as { userId: string }).userId;
+
+      const summary = await OrderService.getMonthlySummary(userId);
 
       res.status(200).json(summary);
     } catch (error) {
@@ -43,10 +49,16 @@ export class OrderController {
     }
   };
 
-  static delete = async (req: Request<{ id: string }>, res: Response) => {
+  static delete = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const deletedOrder = await OrderService.deleteOrder(id);
+      if (typeof id !== "string") {
+        return res.status(400).json({ error: "ID is required" });
+      }
+
+      const userId = (req.user as { userId: string }).userId;
+
+      const deletedOrder = await OrderService.deleteOrder(id, userId);
 
       if (!deletedOrder) {
         return res.status(404).json({ error: "Order not found." });

@@ -1,9 +1,6 @@
 <!-- Backdrop: solo en mobile cuando el sidebar está abierto -->
 @if (isOpen()) {
-  <div
-    class="fixed inset-0 bg-black/50 z-30 lg:hidden"
-    (click)="close()"
-  ></div>
+  <div class="fixed inset-0 bg-black/50 z-30 lg:hidden" (click)="close()"></div>
 }
 
 <aside
@@ -19,8 +16,19 @@
       class="lg:hidden text-gray-400 hover:text-white cursor-pointer"
       aria-label="Cerrar menú"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </button>
   </div>
@@ -55,4 +63,13 @@
       >Configuración</a
     >
   </nav>
+
+  <div class="mt-auto border-t border-gray-700 p-2">
+    <a
+      routerLink="/login"
+      (click)="onLogout()"
+      class="block px-6 py-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors cursor-pointer"
+      >Cerrar sesión</a
+    >
+  </div>
 </aside>

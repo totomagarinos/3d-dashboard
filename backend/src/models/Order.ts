@@ -12,6 +12,8 @@ export interface IOrder {
   suppliesPrice: number;
   profitMultiplier: number;
 
+  userId: string;
+
   material: {
     type: string;
     brand: string;
@@ -90,6 +92,8 @@ const orderSchema = new Schema<IOrder>(
     title: { type: String, required: true },
     clientName: { type: String },
     notes: { type: String },
+
+    userId: { type: String, required: true, index: true },
 
     grams: { type: Number, required: true },
     hours: { type: Number, required: true },

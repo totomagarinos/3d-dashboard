@@ -2,26 +2,30 @@ import { Order } from "../models";
 import type { CreateOrderDTO } from "../schemas";
 
 export class OrderService {
-  static createOrder = async (data: CreateOrderDTO) => {
+  static createOrder = async (data: CreateOrderDTO, userId: string) => {
     try {
-      const order = await Order.create(data);
+      const order = await Order.create({ ...data, userId });
       return order;
     } catch (error) {
       throw new Error("Error creating order in database.");
     }
   };
 
-  static getAllOrders = async () => {
+  static getAllOrders = async (userId: string) => {
     try {
-      const orders = await Order.find();
+      const orders = await Order.find({ userId });
       return orders;
     } catch (error) {
       throw new Error("Error fetching orders from database.");
     }
   };
 
-  static getMonthlySummary = async () => {
+  static getMonthlySummary = async (userId: string) => {
     const result = await Order.aggregate([
+      {
+        $match: { userId },
+      },
+
       {
         $group: {
           _id: {
@@ -54,8 +58,8 @@ export class OrderService {
     return result;
   };
 
-  static deleteOrder = async (id: string) => {
-    const deletedOrder = await Order.findByIdAndDelete(id);
+  static deleteOrder = async (id: string, userId: string) => {
+    const deletedOrder = await Order.findByIdAndDelete({ _id: id, userId });
     return deletedOrder;
   };
 }

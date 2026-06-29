@@ -14,10 +14,6 @@ export class MaterialService {
   baseUrl = environment.apiUrl;
   http: HttpClient = inject(HttpClient);
 
-  constructor() {
-    this.getMaterials();
-  }
-
   getMaterials() {
     this.http
       .get<Material[]>(this.baseUrl)

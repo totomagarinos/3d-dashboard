@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { MaterialService } from '../../services/material.service';
 import { Material } from '../../models/material.model';
@@ -10,7 +10,7 @@ import { MaterialForm } from '../material-form/material-form';
   templateUrl: './material-list.html',
   styleUrl: './material-list.css',
 })
-export class MaterialList {
+export class MaterialList implements OnInit {
   protected readonly materialService = inject(MaterialService);
 
   materials = this.materialService.materials;
@@ -18,6 +18,10 @@ export class MaterialList {
   materialToDelete = signal<string | null>(null);
   isModalOpen = signal(false);
   selectedMaterial = signal<Material | null>(null);
+
+  ngOnInit() {
+    this.materialService.getMaterials();
+  }
 
   openModal(material: Material | null = null) {
     this.isModalOpen.set(true);

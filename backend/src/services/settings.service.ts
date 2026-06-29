@@ -2,9 +2,9 @@ import { Settings } from "../models";
 import type { UpdateSettingsDTO } from "../schemas";
 
 export class SettingsService {
-  static getSettings = async () => {
+  static getSettings = async (userId: string) => {
     try {
-      let settings = await Settings.findOne();
+      let settings = await Settings.findOne({ userId });
 
       if (!settings) {
         settings = await Settings.create({
@@ -22,12 +22,16 @@ export class SettingsService {
     }
   };
 
-  static updateSettings = async (data: UpdateSettingsDTO) => {
+  static updateSettings = async (data: UpdateSettingsDTO, userId: string) => {
     try {
-      const updatedSettings = await Settings.findOneAndUpdate({}, data, {
-        new: true,
-        upsert: true,
-      });
+      const updatedSettings = await Settings.findOneAndUpdate(
+        { userId },
+        data,
+        {
+          new: true,
+          upsert: true,
+        },
+      );
 
       return updatedSettings;
     } catch (error) {

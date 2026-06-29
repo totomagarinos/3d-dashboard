@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { Auth, LoginData, LoginResponse, RegisterData } from '../models/auth.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { AuthAdapter } from '../adapters/auth.adapter';
+import { appRoutes } from '../../app.routes';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,22 @@ export class AuthService {
   }
 
   logout() {
-    this.localManager.clearStorage();
-    // this.router.navigate([]);
+    const refreshToken = this.localManager.getData(LocalKeys.REFRESH_TOKEN);
+
+    if (refreshToken) {
+      this.http.post(`${this.baseUrl}/logout`, { refreshToken }).subscribe({
+        error: () => {
+          this.localManager.clearStorage();
+          this.router.navigate([appRoutes.public.login], { replaceUrl: true });
+        },
+        complete: () => {
+          this.localManager.clearStorage();
+          this.router.navigate([appRoutes.public.login], { replaceUrl: true });
+        },
+      });
+    } else {
+      this.localManager.clearStorage();
+      this.router.navigate([appRoutes.public.login], { replaceUrl: true });
+    }
   }
 }

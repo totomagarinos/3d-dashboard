@@ -21,7 +21,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if ((error.status === 401 || error.status === 403) && !req.url.includes('refresh')) {
+      if (
+        (error.status === 401 || error.status === 403) &&
+        !req.url.includes('refresh') &&
+        !req.url.includes('logout')
+      ) {
         if (!isRefreshing) {
           isRefreshing = true;
           refreshSubject = new BehaviorSubject<string | null>(null);

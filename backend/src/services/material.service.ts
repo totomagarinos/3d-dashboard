@@ -2,9 +2,9 @@ import { Material } from "../models";
 import type { CreateMaterialDTO, UpdateMaterialDTO } from "../schemas";
 
 export class MaterialService {
-  static createMaterial = async (data: CreateMaterialDTO) => {
+  static createMaterial = async (data: CreateMaterialDTO, userId: string) => {
     try {
-      const material = await Material.create(data);
+      const material = await Material.create({ ...data, userId });
 
       return material;
     } catch (error) {
@@ -12,20 +12,28 @@ export class MaterialService {
     }
   };
 
-  static getAllMaterials = async () => {
+  static getAllMaterials = async (userId: string) => {
     try {
-      const materials = await Material.find();
+      const materials = await Material.find({ userId });
       return materials;
     } catch (error) {
       throw new Error("Error fetching materials from database.");
     }
   };
 
-  static updateMaterial = async (id: string, data: UpdateMaterialDTO) => {
+  static updateMaterial = async (
+    id: string,
+    data: UpdateMaterialDTO,
+    userId: string,
+  ) => {
     try {
-      const updatedMaterial = await Material.findByIdAndUpdate(id, data, {
-        returnDocument: "after",
-      });
+      const updatedMaterial = await Material.findByIdAndUpdate(
+        { _id: id, userId },
+        data,
+        {
+          returnDocument: "after",
+        },
+      );
 
       return updatedMaterial;
     } catch (error) {
@@ -33,8 +41,11 @@ export class MaterialService {
     }
   };
 
-  static deleteMaterial = async (id: string) => {
-    const deletedMaterial = await Material.findByIdAndDelete(id);
+  static deleteMaterial = async (id: string, userId: string) => {
+    const deletedMaterial = await Material.findByIdAndDelete({
+      _id: id,
+      userId,
+    });
     return deletedMaterial;
   };
 }

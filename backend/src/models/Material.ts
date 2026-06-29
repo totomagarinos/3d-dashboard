@@ -7,6 +7,7 @@ export interface IMaterial {
   brand: string;
   weight: number;
   price: number;
+  userId: string;
 }
 
 const materialSchema = new Schema<IMaterial>(
@@ -16,6 +17,7 @@ const materialSchema = new Schema<IMaterial>(
     brand: { type: String, required: true },
     weight: { type: Number, required: true },
     price: { type: Number, required: true },
+    userId: { type: String, required: true, index: true },
   },
   {
     timestamps: true,

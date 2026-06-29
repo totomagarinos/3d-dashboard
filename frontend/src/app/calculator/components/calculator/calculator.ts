@@ -52,6 +52,8 @@ export class Calculator implements OnInit {
   savingOrder = signal<boolean>(false);
 
   ngOnInit(): void {
+    this.materialService.getMaterials();
+
     // 1. Restaurar auto-guardado primero
     const savedForm = this.localManager.getData(this.STORAGE_KEY);
     if (savedForm) {

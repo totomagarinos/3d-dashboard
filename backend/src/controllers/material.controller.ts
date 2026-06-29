@@ -1,17 +1,22 @@
 import { parse } from "valibot";
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import { CreateMaterialSchema, UpdateMaterialSchema } from "../schemas";
 import { MaterialService } from "../services";
+import type { AuthenticatedRequest } from "../middlewares/auth";
 
 const isCastError = (error: unknown): error is Error & { name: "CastError" } =>
   error instanceof Error && error.name === "CastError";
 
 export class MaterialController {
-  static create = async (req: Request, res: Response) => {
+  static create = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = parse(CreateMaterialSchema, req.body);
+      const userId = (req.user as { userId: string }).userId;
 
-      const newMaterial = await MaterialService.createMaterial(validatedData);
+      const newMaterial = await MaterialService.createMaterial(
+        validatedData,
+        userId,
+      );
 
       res.status(201).json(newMaterial);
     } catch (error) {
@@ -19,9 +24,11 @@ export class MaterialController {
     }
   };
 
-  static getAll = async (req: Request, res: Response) => {
+  static getAll = async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const materials = await MaterialService.getAllMaterials();
+      const userId = (req.user as { userId: string }).userId;
+
+      const materials = await MaterialService.getAllMaterials(userId);
 
       res.status(200).json(materials);
     } catch (error) {
@@ -31,14 +38,20 @@ export class MaterialController {
     }
   };
 
-  static update = async (req: Request<{ id: string }>, res: Response) => {
+  static update = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const validatedData = parse(UpdateMaterialSchema, req.body);
 
       const { id } = req.params;
+      if (typeof id !== "string")
+        return res.status(400).json({ error: "ID is required." });
+
+      const userId = (req.user as { userId: string }).userId;
+
       const updatedMaterial = await MaterialService.updateMaterial(
         id,
         validatedData,
+        userId,
       );
 
       res.status(200).json(updatedMaterial);
@@ -47,10 +60,15 @@ export class MaterialController {
     }
   };
 
-  static delete = async (req: Request<{ id: string }>, res: Response) => {
+  static delete = async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const deletedMaterial = await MaterialService.deleteMaterial(id);
+      if (typeof id !== "string")
+        return res.status(400).json({ error: "ID is required." });
+
+      const userId = (req.user as { userId: string }).userId;
+
+      const deletedMaterial = await MaterialService.deleteMaterial(id, userId);
 
       if (!deletedMaterial) {
         return res.status(404).json({ error: "Material not found." });

@@ -62,11 +62,11 @@ export const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: appRoutes.public.notFound,
-  //   title: 'Página no encontrada | 3D Manager',
-  //   loadComponent: () => import('./shared/components/not-found/not-found').then((m) => m.NotFound),
-  // },
+  {
+    path: appRoutes.public.notFound,
+    title: 'Página no encontrada | 3D Manager',
+    loadComponent: () => import('./shared/components/not-found/not-found').then((m) => m.NotFound),
+  },
   {
     path: '**',
     redirectTo: appRoutes.public.notFound,
