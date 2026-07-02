@@ -33,6 +33,15 @@ export class Calculator implements OnInit {
   materials = this.materialService.materials;
   materialsArray = computed(() => Array.from(this.materials().values()));
 
+  result = signal<CalculatorOutput | null>(null);
+  error = signal<string | null>(null);
+  savingOrder = signal(false);
+
+  isModalOpen = signal(false);
+  orderTitle = signal('');
+  orderClient = signal('');
+  orderNotes = signal('');
+
   calculatorForm = new FormGroup({
     grams: new FormControl(0, {
       nonNullable: true,
@@ -46,10 +55,6 @@ export class Calculator implements OnInit {
     suppliesPrice: new FormControl(0, { nonNullable: true }),
     profitMultiplier: new FormControl<number | null>(null),
   });
-
-  result = signal<CalculatorOutput | null>(null);
-  error = signal<string | null>(null);
-  savingOrder = signal<boolean>(false);
 
   ngOnInit(): void {
     this.materialService.getMaterials();
@@ -134,7 +139,9 @@ export class Calculator implements OnInit {
     this.savingOrder.set(true);
 
     const order: CreateOrderDTO = {
-      title: `Presupuesto - ${material.type} ${material.brand} - ${new Date().toLocaleDateString()}`,
+      title: this.orderTitle(),
+      clientName: this.orderClient() || undefined,
+      notes: this.orderNotes() || undefined,
       grams: Number(formValue.grams),
       hours: Number(formValue.hours),
       suppliesPrice: Number(formValue.suppliesPrice),
@@ -152,11 +159,23 @@ export class Calculator implements OnInit {
     this.orderService.createOrder(order).subscribe({
       next: () => {
         this.savingOrder.set(false);
+        this.closeModal();
       },
       error: () => {
         this.savingOrder.set(false);
         this.error.set('Error al guardar el presupuesto.');
       },
     });
+  }
+
+  openModal() {
+    this.isModalOpen.set(true);
+  }
+
+  closeModal() {
+    this.isModalOpen.set(false);
+    this.orderTitle.set('');
+    this.orderClient.set('');
+    this.orderNotes.set('');
   }
 }

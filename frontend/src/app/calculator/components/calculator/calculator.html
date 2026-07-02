@@ -110,8 +110,7 @@
       @if (result()) {
         <div class="mt-8">
           <button
-            (click)="saveOrder()"
-            [disabled]="savingOrder()"
+            (click)="openModal()"
             class="w-full bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors cursor-pointer"
           >
             {{ savingOrder() ? 'Guardando...' : 'Guardar presupuesto' }}
@@ -120,4 +119,53 @@
       }
     </div>
   </div>
+  @if (isModalOpen()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-[#1a1c23] w-full max-w-lg rounded-2xl border border-gray-500 shadow-2xl p-8 relative"
+      >
+        <h2 class="text-2xl font-semibold text-white mb-6">Guardar presupuesto</h2>
+
+        <div class="space-y-4">
+          <input
+            [value]="orderTitle()"
+            (input)="orderTitle.set($any($event.target).value)"
+            placeholder="Título"
+            class="w-full bg-[#2a2d36] text-white placeholder:text-gray-500 p-4 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <input
+            [value]="orderClient()"
+            (input)="orderClient.set($any($event.target).value)"
+            placeholder="Nombre del cliente (opcional)"
+            class="w-full bg-[#2a2d36] text-white placeholder:text-gray-500 p-4 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <input
+            [value]="orderNotes()"
+            (input)="orderNotes.set($any($event.target).value)"
+            placeholder="Notas (opcional)"
+            class="w-full bg-[#2a2d36] text-white placeholder:text-gray-500 p-4 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+        </div>
+
+        <div class="flex justify-center gap-4 mt-6">
+          <button
+            (click)="closeModal()"
+            class="px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg font-medium transition-colors cursor-pointer"
+          >
+            Cancelar
+          </button>
+
+          <button
+            (click)="saveOrder()"
+            [disabled]="!orderTitle().trim() || savingOrder()"
+            class="bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors cursor-pointer"
+          >
+            {{ savingOrder() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
