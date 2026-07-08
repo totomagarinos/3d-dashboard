@@ -4,8 +4,6 @@ services:
     image: mongo:latest
     container_name: 3d-mongo-prod
     restart: always
-    # ports:
-    #   - "27017:27017" # Protegida en la red interna
     volumes:
       - mongo_data:/data/db
     networks:
@@ -29,7 +27,7 @@ services:
     networks:
       - app_network
 
-  # 3. FRONTEND (Tu App en Angular + Nginx)
+  # 3. FRONTEND
   web:
     build:
       context: ./frontend
@@ -37,20 +35,20 @@ services:
     container_name: 3d-web-prod
     restart: always
     ports:
-      - "80:80" # HTTP estándar (redirige a HTTPS)
+      - "80:80" # HTTP estándar
       - "443:443" # HTTPS seguro
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro # <-- CORREGIDO: Con la 'n' bien puesta
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - api
     networks:
       - app_network
 
-# Definimos el disco duro virtual para que los materiales y cotizaciones sobrevivan
+# Disco duro virtual para que los materiales y cotizaciones sobrevivan
 volumes:
   mongo_data:
 
-# Definimos una red privada para que los contenedores hablen entre sí de forma segura
+# Red privada para que los contenedores hablen entre sí de forma segura
 networks:
   app_network:
     driver: bridge
