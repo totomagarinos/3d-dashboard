@@ -20,10 +20,9 @@ mongoose
     console.error(`Error connecting to database: ${error.message}`),
   );
 
-const allowedOrigins =
-  process.env.NODE_ENV === "prod"
-    ? ["http://localhost"]
-    : ["http://localhost:4200"];
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",")
+  : ["http://localhost:4200"];
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;

@@ -4,11 +4,14 @@ import { LoginSchema, RegisterSchema } from "../schemas/auth.schema";
 import { AuthService } from "../services";
 import { asyncHandler } from "../utils/asyncHandler";
 import { authenticateToken } from "../middlewares/auth";
+import { authLimiter } from "../helpers/rateLimit";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import JWT_SECRET from "../config";
 import { RevokedToken } from "../models";
 
 export const authRouter = Router();
+
+authRouter.use(authLimiter);
 
 authRouter.post(
   "/register",

@@ -59,6 +59,12 @@ export class AuthService {
 
       if (!user) throw new AppError("Invalid refresh token.", 401);
 
+      // Revocar el token anterior antes de emitir uno nuevo (rotación)
+      await RevokedToken.create({
+        token,
+        expiresAt: new Date((decoded.exp as number) * 1000),
+      });
+
       const accessToken = jwt.sign({ userId: user.id }, JWT_SECRET, {
         expiresIn: "15m",
       });

@@ -132,7 +132,7 @@ describe('SettingsComponent', () => {
 
     const successEl = fixture.debugElement.query(By.css('.text-green-400'));
     expect(successEl).not.toBeNull();
-    expect(successEl.nativeElement.textContent).toContain('Settings saved!');
+    expect(successEl.nativeElement.textContent).toContain('Configuración guardada');
   }));
 
   it('should call updateSettings on form submit with full form data', fakeAsync(() => {
@@ -183,7 +183,7 @@ describe('SettingsComponent', () => {
     patchReq.flush(mockSettings);
     tick();
 
-    expect(component.successMessage()).toBe('Settings saved!');
+    expect(component.successMessage()).toBe('Configuración guardada');
 
     jasmine.clock().tick(3000);
     expect(component.successMessage()).toBeNull();

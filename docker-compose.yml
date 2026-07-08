@@ -22,6 +22,7 @@ services:
       - NODE_ENV=prod
       - PORT=4000
       - DB_URL=mongodb://mongodb:27017/3d-dashboard
+      - CORS_ORIGIN=https://3dcostmanager.com
     depends_on:
       - mongodb
     networks:

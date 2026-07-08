@@ -10,6 +10,7 @@ const revokedTokenSchema = new Schema<IRevokedToken>({
   expiresAt: { type: Date, required: true },
 });
 
+revokedTokenSchema.index({ token: 1 });
 revokedTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export const RevokedToken = model<IRevokedToken>(

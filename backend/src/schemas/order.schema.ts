@@ -1,8 +1,17 @@
-import { number, object, optional, string, type InferOutput } from "valibot";
+import {
+  maxLength,
+  nonEmpty,
+  number,
+  object,
+  optional,
+  pipe,
+  string,
+  type InferOutput,
+} from "valibot";
 
 const MaterialSnapshotSchema = object({
-  type: string(),
-  brand: string(),
+  type: pipe(string(), nonEmpty(), maxLength(100)),
+  brand: pipe(string(), nonEmpty(), maxLength(100)),
   weight: number(),
   price: number(),
 });
@@ -26,9 +35,9 @@ const OutputSchema = object({
 });
 
 export const CreateOrderSchema = object({
-  title: string("Title is required."),
-  clientName: optional(string()),
-  notes: optional(string()),
+  title: pipe(string("Title is required."), nonEmpty(), maxLength(200)),
+  clientName: optional(pipe(string(), maxLength(100))),
+  notes: optional(pipe(string(), maxLength(1000))),
 
   grams: number(),
   hours: number(),

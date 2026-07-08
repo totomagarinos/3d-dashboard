@@ -84,14 +84,14 @@ export class Settings implements OnInit {
     this.settingsService.updateSettings(formData).subscribe({
       next: () => {
         this.loading.set(false);
-        this.successMessage.set('Settings saved!');
+        this.successMessage.set('Configuración guardada');
         setTimeout(() => {
           this.successMessage.set(null);
         }, 3000);
       },
       error: () => {
         this.loading.set(false);
-        this.error.set('Failed to save settings');
+        this.error.set('Error al guardar la configuración');
       },
     });
   }
